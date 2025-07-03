@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Queen Sulagna</title>
+    <style>
+        /* General Body Styling */
+        body {
+            margin: 0;
+            overflow: hidden; /* Hide scrollbars */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #000000; /* Pure Black background */
+            font-family: 'Inter', sans-serif; /* Using Inter font */
+            color: #E0FFFF; /* Very Light Sky Blue text for general body */
+        }
+
+        /* Page 1: Arrow, Love Emoji, Blast, and Reveal */
+        .page-one {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Center content vertically */
+            background-color: #000000; /* Pure Black */
+            transition: opacity 0.5s ease-out;
+        }
+
+        .arrow-svg {
+            position: absolute;
+            left: -150px; /* Start off-screen */
+            width: 150px;
+            height: auto;
+            z-index: 2;
+            transition: left 1s ease-out, transform 0.3s ease-out; /* Smooth arrow movement */
+            color: #E0FFFF; /* Very Light Sky Blue for arrow */
+        }
+
+        .love-emoji {
+            font-size: 200px;
+            cursor: default; /* Not directly clickable for transition now */
+            transition: transform 0.3s ease-out, opacity 0.5s ease-in; /* Added opacity transition */
+            position: relative;
+            z-index: 1;
+            opacity: 0; /* Start hidden */
+            color: #E0FFFF; /* Very Light Sky Blue for love emoji */
+        }
+
+        .blast-animation {
+            position: absolute;
+            width: 0;
+            height: 0;
+            background-color: #ADD8E6; /* Light Blue for blast, slightly more visible than E0FFFF */
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s ease-out;
+            z-index: 3;
+        }
+
+        .reveal-text {
+            position: absolute;
+            font-size: 50px;
+            font-weight: bold;
+            color: #E0FFFF; /* Very Light Sky Blue for text */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-in, transform 1s ease-in;
+            z-index: 4;
+            text-align: center;
+            padding: 0 20px; /* Add some padding for smaller screens */
+        }
+
+        /* Page 2: Letter Envelope, Balloons, and The Letter */
+        .page-two {
+            position: absolute; /* Position absolutely to cover page one */
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #1a1a1a; /* Slightly off-black background */
+            overflow: hidden; /* For balloons */
+            opacity: 0; /* Initially hidden */
+            pointer-events: none; /* Disable interaction when hidden */
+            transition: opacity 0.5s ease-in;
+        }
+
+        .page-two.active {
+            opacity: 1;
+            pointer-events: auto; /* Enable interaction when active */
+        }
+
+        .envelope {
+            font-size: 150px;
+            cursor: pointer;
+            position: absolute;
+            top: 10%; /* Stays at 10% after arrival */
+            opacity: 1; /* Ensure it's visible initially */
+            animation: envelopeArrive 2s forwards ease-out;
+            z-index: 5;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8); /* Darker subtle shadow */
+            transition: opacity 0.5s ease-out; /* For fading out */
+        }
+
+        @keyframes envelopeArrive {
+            from { top: -200px; }
+            to { top: 10%; } /* Arrive at 10% from top */
+        }
+
+        .balloons-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0; /* Behind other elements */
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 50px;
+            animation: balloonFloat 10s infinite ease-in-out;
+            opacity: 0.8;
+            /* Using original emoji colors for variety, but ensuring contrast */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* Darker subtle shadow for balloons */
+        }
+
+        @keyframes balloonFloat {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            25% { opacity: 0.8; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .letter-content {
+            background-color: transparent; /* Removed background */
+            padding: 30px;
+            border-radius: 15px; /* More rounded corners */
+            box-shadow: none; /* Removed box shadow */
+            max-width: 700px;
+            width: 90%; /* Make it take up more width on smaller screens */
+            max-height: 70vh; /* Set a max height relative to viewport height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            margin: 50px auto;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 1s ease-in, transform 1s ease-in;
+            z-index: 1; /* Above balloons */
+            line-height: 1.7; /* Slightly more line height */
+            font-size: 18px;
+            color: #E0FFFF; /* Very Light Sky Blue for letter text */
+            border: none; /* Removed border */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        .letter-content p {
+            margin-bottom: 15px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .love-emoji {
+                font-size: 150px;
+            }
+            .reveal-text {
+                font-size: 35px;
+            }
+            .arrow-svg {
+                width: 100px;
+            }
+            .envelope {
+                font-size: 100px;
+            }
+            .letter-content {
+                padding: 20px;
+                margin: 20px;
+                font-size: 16px;
+                max-height: 60vh; /* Adjust max height for tablets */
+            }
+            .balloon {
+                font-size: 40px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .love-emoji {
+                font-size: 100px;
+            }
+            .reveal-text {
+                font-size: 25px;
+            }
+            .arrow-svg {
+                width: 80px;
+            }
+            .envelope {
+                font-size: 80px;
+            }
+            .letter-content {
+                padding: 15px;
+                margin: 15px;
+                font-size: 14px;
+                max-height: 50vh; /* Adjust max height for mobile */
+            }
+            .balloon {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Page 1 Content -->
+    <div class="page-one" id="pageOne">
+        <!-- SVG for the arrow -->
+        <svg class="arrow-svg" id="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="1" y1="12" x2="23" y2="12"></line>
+            <path d="M17 5l6 7-6 7"></path>
+        </svg>
+        <div class="love-emoji" id="loveEmoji">❤️</div>
+        <div class="blast-animation" id="blastAnimation"></div>
+        <div class="reveal-text" id="revealText">Advocate Sulagna Ghosh</div>
+        <!-- Removed the 'enter-text' div -->
+    </div>
+
+    <!-- Page 2 Content -->
+    <div class="page-two" id="pageTwo">
+        <div class="envelope" id="envelope">
+            ✉️
+        </div>
+        <div class="balloons-container" id="balloonsContainer"></div>
+        <div class="letter-content" id="letterContent">
+            <p><strong>To: Her Royal Highness, Queen Sulagna Ghosh 👑</strong></p>
+            <p><strong>Subject: A humble appeal from your (currently nervous) boyfriend</strong></p>
+            <p>Dear Sulagna,</p>
+            <p>It has come to my attention (via cold stares, dramatic silences, and the sudden disappearance of “❤️” emojis) that Your Majesty is angry.</p>
+            <p>As your loyal (and slightly scared) boyfriend, I’d like to present my official statement:</p>
+            <p>I messed up. I goofed. I deserve 2 days of silent treatment and 1 week of puppy eyes punishment.</p>
+            <p>But also... please forgive me before I start talking to houseplants for emotional support.</p>
+            <p>Let’s be honest, when you’re mad, even the Wi-Fi signal gets weak.</p>
+            <p>Birds stop chirping.</p>
+            <p>And my brain? Offline.</p>
+            <p>You're the spark in my socket, the charger to my phone. Without you, I’m basically a 1% battery guy wandering around looking for signal.</p>
+            <p>I know you’re small in size (yes yes, shoe size 4 and a little pocket rocket), but your anger has the power of a thousand suns and three Bengali mothers combined.</p>
+            <p>So here I am — with folded hands, hopeful heart, and zero ego — requesting you to end World War Sulagna and come back to your usual cute, dramatic, bossy self (which I love endlessly).</p>
+            <p>Until then, I shall sit in the corner of my room, listening to sad Bollywood songs, pretending I’m in a music video.</p>
+            <p>Forever yours (even if you banish me to the couch),</p>
+            <p>Your apologetic idiot,</p>
+            <p>❤️ The guy who loves you more than biryani (and that’s saying A LOT)</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const pageOne = document.getElementById('pageOne');
+            const pageTwo = document.getElementById('pageTwo');
+
+            const arrow = document.getElementById('arrow');
+            const loveEmoji = document.getElementById('loveEmoji');
+            const blastAnimation = document.getElementById('blastAnimation');
+            const revealText = document.getElementById('revealText');
+            // Removed: const enterText = document.getElementById('enterText');
+
+            const envelope = document.getElementById('envelope');
+            const letterContent = document.getElementById('letterContent');
+            const balloonsContainer = document.getElementById('balloonsContainer');
+
+            // --- Page 1 Logic ---
+            function startPageOneAnimation() {
+                // Make the love emoji appear first
+                setTimeout(() => {
+                    loveEmoji.style.opacity = 1;
+                }, 200); // Small delay for the emoji to fade in
+
+                // Get emoji position to target arrow
+                // We need to wait a moment for the emoji to render its size
+                setTimeout(() => {
+                    const emojiRect = loveEmoji.getBoundingClientRect();
+                    // Position arrow to the left of the emoji, slightly adjusted for visual appeal
+                    const arrowTargetX = emojiRect.left - arrow.offsetWidth / 2;
+                    const arrowTargetY = emojiRect.top + (emojiRect.height / 2) - (arrow.offsetHeight / 2);
+
+                    arrow.style.position = 'absolute';
+                    arrow.style.left = `${arrowTargetX}px`;
+                    arrow.style.top = `${arrowTargetY}px`;
+
+                    // Animate arrow moving towards the emoji
+                    // The actual hit point will be the center of the emoji
+                    arrow.style.transition = 'left 1s ease-out';
+                    arrow.style.left = `${emojiRect.left + emojiRect.width / 2 - arrow.offsetWidth / 2}px`;
+
+                    // Set a timeout for when the arrow "hits"
+                    setTimeout(() => {
+                        // Blast animation starts
+                        blastAnimation.style.opacity = 1;
+                        blastAnimation.style.transform = 'scale(2)';
+                        blastAnimation.style.width = '300px';
+                        blastAnimation.style.height = '300px';
+
+                        loveEmoji.style.opacity = 0; // Hide emoji after blast
+
+                        // Set a timeout for the blast to fade out and text to reveal
+                        setTimeout(() => {
+                            blastAnimation.style.opacity = 0; // Fade out blast
+                            blastAnimation.style.transform = 'scale(0)';
+
+                            // Reveal text
+                            revealText.style.opacity = 1;
+                            revealText.style.transform = 'translateY(0)';
+
+                            // Automatically transition to Page 2 after reveal text
+                            setTimeout(() => {
+                                transitionToPageTwo();
+                            }, 3000); // 3 seconds after revealText appears
+                        }, 500); // Blast animation duration
+                    }, 1000); // Arrow movement duration
+                }, 300); // Delay starting arrow animation slightly after emoji appears
+            }
+
+            // --- Page 2 Logic ---
+            function createBalloon() {
+                const balloon = document.createElement('div');
+                balloon.classList.add('balloon');
+                // Added more blue-ish emojis for the theme
+                const emojis = ['🎈', '💙', '🔵', '💧', '✨', '🤍', '🧊'];
+                balloon.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                balloon.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+                balloon.style.animationDuration = `${Math.random() * 5 + 5}s`; // 5-10 seconds
+                balloon.style.animationDelay = `${Math.random() * 5}s`; // Stagger start times
+                balloonsContainer.appendChild(balloon);
+
+                // Remove balloon after animation to prevent DOM clutter
+                balloon.addEventListener('animationend', () => {
+                    balloon.remove();
+                });
+            }
+
+            function startPageTwoAnimation() {
+                // Generate more balloons initially
+                for (let i = 0; i < 20; i++) { // Increased from 10 to 20
+                    createBalloon();
+                }
+                setInterval(createBalloon, 500); // Add a new balloon every 0.5 seconds (was 1 second)
+
+                // Reveal the letter content after a delay that includes envelope animation
+                setTimeout(() => {
+                    letterContent.style.opacity = 1;
+                    letterContent.style.transform = 'scale(1)';
+
+                    // Fade out the envelope after the letter appears
+                    setTimeout(() => {
+                        envelope.style.opacity = 0;
+                    }, 1000); // 1 second after letter appears
+                }, 3000); // 2 seconds for envelope animation + 1 second buffer
+            }
+
+            // --- Page Transition Logic ---
+            function transitionToPageTwo() {
+                // Removed: enterText.removeEventListener('click', transitionToPageTwo);
+
+                pageOne.style.opacity = 0; // Fade out page one
+                setTimeout(() => {
+                    pageOne.style.display = 'none'; // Hide page one after fade
+                    pageTwo.classList.add('active'); // Make page two visible and interactive
+                    startPageTwoAnimation(); // Start page two's animations
+                }, 500); // Match pageOne fade-out duration
+            }
+
+            // Start the first page's animation when the document is ready
+            startPageOneAnimation();
+        });
+    </script>
+</body>
+</html>
